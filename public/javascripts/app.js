@@ -1,4 +1,7 @@
 
+
+import { Device } from '@twilio/voice-sdk';
+
 document.addEventListener('DOMContentLoaded', function() {
     let device;
     let activeCall;
@@ -9,7 +12,7 @@ document.addEventListener('DOMContentLoaded', function() {
         fetch('/token')
             .then(res => res.json())
             .then(data => {
-                device = new Twilio.Device(data.token);
+                device = new Device(data.token);
                 device.register();
 
                 device.on('registered', function() {
