@@ -40,6 +40,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
             // Quan es pengi la trucada (per qualsevol dels dos costats)
             activeCall.on('disconnect', function() {
+                console.log('Trucada penjada');
                 document.getElementById('hangup-button').disabled = true;
                 botons.forEach(b => b.disabled = false);
             });

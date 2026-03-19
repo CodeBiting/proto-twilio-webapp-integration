@@ -50,6 +50,8 @@ router.get('/token', (req, res) => {
 // Twilio cridarà aquí quan el navegador faci device.connect()
 router.post('/voice', (req, res) => {
   try {
+    logger.info('Rebuda de trucada per al número: ' + req.body.To);
+
     const VoiceResponse = twilio.twiml.VoiceResponse;
     const response = new VoiceResponse();
 
