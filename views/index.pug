@@ -1,0 +1,13 @@
+extends layout
+
+block content
+  h1 Test Twilio
+  button#startup-button 1. Initialice device
+  hr
+  button.btn-trucada(onclick=`ferTrucada('${telephone}')`, disabled) Call to #{telephone}
+  br
+  br
+  button#hangup-button(onclick="penjarTrucada()", disabled, style="color: red;") Hang up
+  script(src="https://sdk.twilio.com/js/voice/releases/2.10.1/twilio.min.js")
+  script(src="javascripts/app.js")
+
