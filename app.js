@@ -15,9 +15,9 @@ const morganFormat = process.env.NODE_ENV !== "production" ? "dev" : "combined";
 
 app.use(
   morgan(morganFormat, {
-    skip: function(req, res) {
-      return res.statusCode < 400;
-    },
+    //skip: function(req, res) {
+    //  return res.statusCode < 400;
+    //},
     stream: {
       write: (message) => logger.http(message.trim()),
     },

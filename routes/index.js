@@ -51,6 +51,8 @@ router.get('/token', (req, res) => {
 // --- ENDPOINT 2: Instruccions de la trucada (TwiML) ---
 // Twilio cridarà aquí quan el navegador faci device.connect()
 router.post('/handle_calls', (req, res) => {
+  logger.info('Rebuda de petició per /handle_calls');
+  logger.info('Rebuda de petició per /handle_calls amb dades: ' + JSON.stringify(req.body));
   try {
     logger.info('Rebuda de trucada per al número: ' + req.body.To);
 
@@ -58,7 +60,7 @@ router.post('/handle_calls', (req, res) => {
     const response = new VoiceResponse();
 
     // El número de telèfon arriba al camp 'To'
-    const dial = response.dial({ callerId: process.env.TWILIO_PHONE_NUMBER });
+    const dial = response.dial({ callerId: req.body.To });
     dial.number(req.body.To);
 
     logger.info('Generant resposta de veu per trucar al número: ' + req.body.To);
