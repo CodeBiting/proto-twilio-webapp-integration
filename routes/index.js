@@ -20,15 +20,17 @@ router.get('/token', (req, res) => {
       process.env.TWILIO_API_KEY,    // Comença per SK...
       process.env.TWILIO_API_SECRET, // El secret que et donen en crear la SK
       { 
-        identity: 'usuari_web_proves', // Pots posar un ID d'usuari real aquí
+        identity: process.env.TWILIO_TEST_PHONE || 'usuari_web_proves', // Pots posar un ID d'usuari real aquí
         ttl: 3600 // El token durarà 1 hora
       }
     );
 
+    // const token = process.env.TWILIO_TOKEN; // No funciona, es necessita crear un token dinàmicament per a cada usuari
+
     // 2. Crear el Permís de Veu (Grant)
     const voiceGrant = new VoiceGrant({
-      outgoingApplicationSid: process.env.TWILIO_APP_SID, // El SID de la TwiML App (AP...)
-      incomingAllow: true, // Permet rebre trucades al navegador si cal
+      outgoingApplicationSid: process.env.TWILIO_TWIML_APP_SID, // El SID de la TwiML App (AP...) Es crea a https://console.twilio.com/us1/develop/phone-numbers/manage/twiml-apps
+      incomingAllow: false, // Permet rebre trucades al navegador si cal
     });
 
     // 3. Afegir el permís al token
@@ -48,7 +50,7 @@ router.get('/token', (req, res) => {
 
 // --- ENDPOINT 2: Instruccions de la trucada (TwiML) ---
 // Twilio cridarà aquí quan el navegador faci device.connect()
-router.post('/voice', (req, res) => {
+router.post('/handle_calls', (req, res) => {
   try {
     logger.info('Rebuda de trucada per al número: ' + req.body.To);
 
