@@ -12,7 +12,15 @@ document.addEventListener('DOMContentLoaded', function() {
         fetch('/token')
             .then(res => res.json())
             .then(data => {
-                device = new Device(data.token);
+                device = new Device(data.token, {
+                    // Opcions de configuració del dispositiu
+                    // Per exemple, pots configurar els tones DTMF, codecs, etc. aquí
+                    // Forcem la regió d'Europa per evitar salts de connexió
+                    // Nota: Les regions vàlides són ie1 (Irlanda), de1 (Alemanya) o ashburn (US East). No facis servir el paràmetre region (està obsolet), fes servir edge.
+                    // Ports necessaris: El WebSocket de Twilio utilitza el port 443 (WSS).
+                    // Ves a la Consola de Twilio > Voice > Settings > Geo Permissions. Assegura't que Spain i United States estan marcats. Si no ho estan, Twilio tancarà la connexió tan bon punt intentis marcar el número.
+                    edge: ['ie1']
+                });
                 device.register();
 
                 device.on('registered', function() {
@@ -21,6 +29,11 @@ document.addEventListener('DOMContentLoaded', function() {
                     // Activem tots els botons que tinguin la classe 'btn-trucada'
                     const botons = document.querySelectorAll('.btn-trucada');
                     botons.forEach(b => b.disabled = false);
+                });
+
+                device.on('error', function(error) {
+                    console.error('Error detallat de Twilio:', error.code);
+                    console.error('Missatge:', error.message);
                 });
             });
     };
