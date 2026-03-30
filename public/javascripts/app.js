@@ -19,7 +19,10 @@ document.addEventListener('DOMContentLoaded', function() {
                     // Nota: Les regions vàlides són ie1 (Irlanda), de1 (Alemanya) o ashburn (US East). No facis servir el paràmetre region (està obsolet), fes servir edge.
                     // Ports necessaris: El WebSocket de Twilio utilitza el port 443 (WSS).
                     // Ves a la Consola de Twilio > Voice > Settings > Geo Permissions. Assegura't que Spain i United States estan marcats. Si no ho estan, Twilio tancarà la connexió tan bon punt intentis marcar el número.
-                    edge: ['ie1']
+                    // edge: ['ie1']
+                    edge: ['us1'],
+                    enableRingingState: true,
+                    debug: true,
                 });
                 device.register();
 
@@ -45,6 +48,8 @@ document.addEventListener('DOMContentLoaded', function() {
         if (device) {
             // Passem el número a Twilio a través dels params
             activeCall = await device.connect({ params: { To: numero } });
+
+            console.log(`Trucada iniciada al número: ${numero}`);
 
             // Gestionem la interfície
             document.getElementById('hangup-button').disabled = false;

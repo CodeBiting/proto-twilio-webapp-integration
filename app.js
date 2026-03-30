@@ -25,9 +25,9 @@ app.use(
 );
 
 // parse application/x-www-form-urlencoded
-app.use(bodyParser.urlencoded({ extended: false }));
+// app.use(bodyParser.urlencoded({ extended: false })); // Commentat ja que sinó bloqueja les crides POST amb JSON al body
 // parse application/json
-app.use(bodyParser.json());
+// app.use(bodyParser.json()); // Commentat ja que sinó bloqueja les crides POST amb JSON al body
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));

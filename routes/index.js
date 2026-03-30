@@ -13,16 +13,29 @@ router.get('/', function(req, res, next) {
 router.get('/token', (req, res) => {
   try {
     logger.info('Generant token per al frontend...');
+    logger.info('Utilitzant les següents variables d\'entorn:');
+    logger.info('TWILIO_ACCOUNT_SID: ' + process.env.TWILIO_ACCOUNT_SID);
+    logger.info('TWILIO_API_KEY: ' + process.env.TWILIO_API_KEY);
+    logger.info('TWILIO_API_SECRET: ' + (process.env.TWILIO_API_SECRET ? '****' : 'No definit'));
+    logger.info('TWILIO_TWIML_APP_SID: ' + process.env.TWILIO_TWIML_APP_SID);
+    logger.info('TWILIO_PHONE_NUMBER: ' + process.env.TWILIO_PHONE_NUMBER);
+
+    const identity = process.env.TWILIO_PHONE_NUMBER
 
     // 1. Crear l'AccessToken
     const token = new AccessToken(
       process.env.TWILIO_ACCOUNT_SID,
       process.env.TWILIO_API_KEY,    // Comença per SK...
       process.env.TWILIO_API_SECRET, // El secret que et donen en crear la SK
-      { 
-        identity: process.env.TWILIO_TEST_PHONE || 'usuari_web_proves', // Pots posar un ID d'usuari real aquí
-        ttl: 3600 // El token durarà 1 hora
+      {
+        // identity: process.env.TWILIO_PHONE_NUMBER
+        identity
       }
+      /*
+      { 
+        identity:  // process.env.TWILIO_PHONE_NUMBER || 'usuari_web_proves', // Pots posar un ID d'usuari real aquí
+        ttl: 3600 // El token durarà 1 hora
+      }*/
     );
 
     // const token = process.env.TWILIO_TOKEN; // No funciona, es necessita crear un token dinàmicament per a cada usuari
@@ -52,7 +65,7 @@ router.get('/token', (req, res) => {
 // Twilio cridarà aquí quan el navegador faci device.connect()
 router.post('/handle_calls', (req, res) => {
   logger.info('Rebuda de petició per /handle_calls');
-  logger.info('Rebuda de petició per /handle_calls amb dades: ' + JSON.stringify(req.body));
+  logger.info('Rebuda de petició per /handle_calls amb dades: ' + JSON.stringify(req.body, null, 2));
   try {
     logger.info('Rebuda de trucada per al número: ' + req.body.To);
 
@@ -60,10 +73,11 @@ router.post('/handle_calls', (req, res) => {
     const response = new VoiceResponse();
 
     // El número de telèfon arriba al camp 'To'
-    const dial = response.dial({ callerId: req.body.To });
+    const dial = response.dial({ callerId: process.env.TWILIO_PHONE_NUMBER }); // Opcional: Pots configurar el callerId si vols que aparegui un número específic a la persona que reps la trucada
     dial.number(req.body.To);
 
     logger.info('Generant resposta de veu per trucar al número: ' + req.body.To);
+    logger.info(response.toString());
     res.type('text/xml');
     res.send(response.toString());
   } catch (error) {
